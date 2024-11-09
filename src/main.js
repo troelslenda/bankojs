@@ -1,5 +1,5 @@
-import "./style.css";
-import { en, da } from "./i18n.json";
+import "./style.scss";
+import { da, en } from "./i18n.json";
 
 document.querySelector("#app").innerHTML = `
   <section class="overview"></section>
