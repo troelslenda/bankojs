@@ -1,0 +1,14 @@
+{
+  "name": "bankojs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite src",
+    "build": "vite build src",
+    "preview": "vite preview src"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}
