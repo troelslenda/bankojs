@@ -7,11 +7,14 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 70px;
-
 }
 
 .ball {
-  background: radial-gradient(circle, rgba(251,63,63,1) 0%, rgba(106,0,0,1) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(251, 63, 63, 1) 0%,
+    rgba(106, 0, 0, 1) 100%
+  );
   font-family: Arial;
   display: flex;
   align-items: center;
@@ -21,25 +24,27 @@ body {
   padding: 10px;
   height: 32px;
   width: 32px;
-  
+
   .current & {
     font-size: 250px;
     height: 400px;
     width: 400px;
   }
-  
+
   .overview &:not(.drawn) {
     background: darkblue;
-    color: rgba(255,255,255,0.5);
-    border: 1px solid rgba(255,255,255,0.5);
-      height: 30px;
-  width: 30px;
-   }
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    height: 30px;
+    width: 30px;
+  }
 }
 
-p { margin: 0; }
+p {
+  margin: 0;
+}
 .overview {
-      justify-content: center;
+  justify-content: center;
   align-items: center;
   grid-column-start: 1;
   grid-column-end: 3;
@@ -56,14 +61,14 @@ p { margin: 0; }
 .current {
   display: flex;
   flex-direction: column;
-    justify-content: center;
+  justify-content: center;
   align-items: center;
-    grid-column-start: 3;
+  grid-column-start: 3;
   grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 1;
   p {
-    padding-top:10px;
+    padding-top: 10px;
     color: #fff;
     font-family: Arial;
     font-size: 40px;
@@ -77,13 +82,13 @@ button {
   grid-row-end: 2;
 }
 .picked {
-  grid-column-start:1;
+  grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 2;
   margin: 0;
   padding: 0;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   list-style: none;
