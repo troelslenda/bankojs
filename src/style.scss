@@ -80,7 +80,7 @@ button {
   grid-row-start: 2;
   grid-row-end: 2;
 }
-.picked {
+.all {
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 2;
@@ -93,5 +93,10 @@ button {
   list-style: none;
   li {
     padding: 1.5px;
+    display: none;
+    &:nth-last-child(-n + 6):not(:last-child) {
+      display: block;
+    } 
   }
 }
+

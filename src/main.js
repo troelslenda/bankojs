@@ -17,121 +17,120 @@ document.querySelector("#app").innerHTML = `
 
 const d = document;
 const dc = (tag) => {
-  return d.createElement(tag);
+    return d.createElement(tag);
 };
 
 const createBall = (n) => {
-  const ball = dc("b");
-  ball.classList.add("ball");
-  //ball.classList.add("red");
-  ball.textContent = n;
-  return ball;
+    const ball = dc("b");
+    ball.classList.add("ball");
+    //ball.classList.add("red");
+    ball.textContent = n;
+    return ball;
 };
 const selectBall = (item) => item.classList.add("drawn");
 
 const app = {
-  numbers: [],
-  pickedNumbers: [],
-  displaynumbers: [],
+    numbers: [],
+    pickedNumbers: [],
+    displaynumbers: [],
 
-  init() {
-    console.log("init");
-    d.querySelector(".draw").addEventListener("click", app.click);
-    d.querySelector(".reset").addEventListener("click", () => {
-      app.resetNumbers();
-      app.updateCurrent();
-      app.updatePickedNumbers();
-      app.updateButton();
-    });
-    app.resetNumbers();
-    app.buildGrid();
-  },
-  click: () => {
-    app.shuffle();
-    app.moveNext();
-    app.updatePickedNumbers();
-    app.updateGrid();
-    app.updateCurrent();
-    app.updateButton();
-  },
-  updateButton() {
-    d.querySelector(".draw").disabled = app.numbers.length === 0;
-  },
-  buildGrid() {
-    // todo reduce...
-    //const numbers = app.numbers.reduce((newArray, item) => {
-    //      return newArray.concat([item)
-    //    }, []);
-    const dnumbers = [...app.numbers];
-    [9, 10, 21, 32, 43, 54, 65, 76, 87].forEach((n) => {
-      dnumbers.splice(n, 0, "");
-    });
+    init() {
+        d.querySelector(".draw").addEventListener("click", () => {
+            app.moveNext();
+            app.updateUI();
+        });
+        d.querySelector(".reset").addEventListener("click", () => {
+            app.newGame();
+            //app.updateUI();
+        });
+        d.querySelector(".shuffle").addEventListener("click", () => {
+            app.shuffle();
+        });
+        app.newGame();
+        //app.UI.buildGrid();
+    },
 
-    const items = dnumbers.map((n) => {
-      return n ? createBall(n) : dc("b");
-    });
-    d.querySelector(".overview").append(...items);
-  },
-  updateGrid() {
-    const grid = d.querySelectorAll(".overview b:not(.drawn)");
-    // todo use replacechildren
-    grid.forEach((item, index) => {
-      if (app.pickedNumbers.includes(+item.innerHTML)) {
-        selectBall(item);
-      }
-    });
-  },
-  resetNumbers() {
-    app.numbers = [
-      ...Array(90)
-        .keys()
-        .map((n) => n + 1),
-    ];
-    app.pickedNumbers = [];
-  },
+    resetNumbers() {
+        app.numbers = [
+            ...Array(90)
+                .keys()
+                .map((n) => n + 1),
+        ];
+        app.pickedNumbers = [];
+    },
 
-  shuffle() {
-    for (var i = app.numbers.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = app.numbers[i];
-      app.numbers[i] = app.numbers[j];
-      app.numbers[j] = temp;
+    shuffle() {
+        for (let i = app.numbers.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = app.numbers[i];
+            app.numbers[i] = app.numbers[j];
+            app.numbers[j] = temp;
+        }
+    },
+    moveNext() {
+        app.pickedNumbers.push(app.numbers.pop());
+    },
+
+    newGame() {
+        app.resetNumbers();
+        app.UI.buildGrid();
+        app.updateUI();
+        app.shuffle();
+    },
+    updateUI() {
+        app.UI.updatePickedNumbers();
+        app.UI.updateGrid();
+        app.UI.updateCurrent();
+        app.UI.updateButton();
+    },
+    UI: {
+        buildGrid() {
+            const items = [...app.numbers]
+                .reduce((a, n, i) => a
+                    .concat([9, 9, 19, 29, 39, 49, 59, 69, 79]
+                        .filter(j => i === j)
+                        .map(_ => ""), n)
+                    , [])
+                .map((n) => n ? createBall(n) : dc("b"));
+
+            d.querySelector(".overview").replaceChildren(...items);
+        },
+        updateCurrent() {
+            const c = d.querySelector(".current");
+            const lastBall = d.querySelector(".all").lastChild
+            // look into .at
+            if (lastBall)
+                c.replaceChildren(lastBall)
+            if (lastBall && da[lastBall.textContent]) {
+                const text = dc("p");
+                text.textContent = da[lastBall.textContent];
+                d.querySelector(".current").append(text);
+            }
+        },
+        updatePickedNumbers: () => {
+            const allPicked = app.pickedNumbers.map((n) => {
+                const l = dc("li");
+                l.replaceChildren(createBall(n))
+                return l;
+            });
+            d.querySelector(".all").replaceChildren(...allPicked);
+
+        },
+        updateButton() {
+            d.querySelector(".draw").disabled = app.numbers.length === 0;
+        },
+
+        updateGrid() {
+            const grid = d.querySelectorAll(".overview b:not(.drawn)");
+            // todo use replacechildren
+            grid.forEach((item, index) => {
+                if (app.pickedNumbers.includes(+item.innerHTML)) {
+                    selectBall(item);
+                }
+            });
+        },
+
     }
-  },
-  moveNext() {
-    app.pickedNumbers.push(app.numbers.pop());
-  },
-  updatePickedNumbers: () => {
-    const list2 = d.querySelector(".all");
-    const list = d.querySelector(".picked");
-    list.innerHTML = "";
-
-    const allPicked = app.pickedNumbers.map((n) => {
-      return (dc("li").textContent = n);
-    });
-    list2.replaceChildren(...allPicked);
-    app.pickedNumbers.slice(-6, -1).forEach((n) => {
-      const item = dc("li");
-      item.append(createBall(n));
-      list.append(item);
-    });
-  },
-  updateCurrent() {
-    const c = d.querySelector(".current");
-    // look into .at
-    const n = app.pickedNumbers.slice(-1)[0];
-    if (!n) {
-      c.innerHTML = "";
-      return;
-    }
-    d.querySelector(".current").replaceChildren(createBall(n));
-    const f = da[n];
-    if (f) {
-      const text = d.createElement("p");
-      text.textContent = f;
-      d.querySelector(".current").append(text);
-    }
-  },
 };
 
 app.init();
